@@ -12,7 +12,7 @@ public class LBloomFilter {
     public interface LHashingStrategy {
         long[] hash(byte[] data, int numHashes);
     }
-    
+
     private final int numHashes;
     private final long numBits;
     private final LBitSet bits;
@@ -44,7 +44,7 @@ public class LBloomFilter {
     }
 
     public static LIntLong optimalParameters(double fpProb, long maxNumEntries) {
-        long numBits = (long)ceil((maxNumEntries * log(fpProb)) / log(1.0 / pow(2.0, log(2.0))));
+        long numBits = (long)ceil(maxNumEntries * log(fpProb) / log(1.0 / pow(2.0, log(2.0))));
         int numHashes = (int)round(log(2.0) * numBits / maxNumEntries);
         return new LIntLong(numHashes, numBits);
     }
