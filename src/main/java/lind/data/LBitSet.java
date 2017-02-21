@@ -2,11 +2,13 @@ package lind.data;
 
 import lind.array.LLongArray;
 
+import java.io.Serializable;
+
 /**
  * User: vitaly.khudobakhshov
  * Date: 17/07/16
  */
-public class LBitSet {
+public class LBitSet implements Serializable {
     private final LLongArray words;
     private long numBits;
 

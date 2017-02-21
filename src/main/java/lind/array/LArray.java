@@ -2,11 +2,13 @@ package lind.array;
 
 import lind.tuple.LInt2;
 
+import java.io.Serializable;
+
 /**
  * User: vitaly.khudobakhshov
  * Date: 17/07/16
  */
-public abstract class LArray {
+public abstract class LArray implements Serializable {
     protected long length;
     protected int chunkSize;
     protected int chunkSizeLog2;

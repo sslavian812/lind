@@ -42,7 +42,7 @@ public class LBloomFilterTest {
         assertFalse(bf.containsBytes("test".getBytes()));
     }
 
-    private static LBloomFilter.LHashingStrategy mumur3Strategy = new LBloomFilter.LHashingStrategy() {
+    static LBloomFilter.LHashingStrategy mumur3Strategy = new LBloomFilter.LHashingStrategy() {
         int salt = 0xAF;
 
         public long[] hash(byte[] data, int numHashes) {

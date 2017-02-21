@@ -1,15 +1,19 @@
 package lind.data;
 
+import com.google.common.hash.Hashing;
 import lind.tuple.LIntLong;
+
+import java.io.Serializable;
+
 import static java.lang.Math.*;
 
 /**
  * User: vitaly.khudobakhshov
  * Date: 19/07/16
  */
-public class LBloomFilter {
+public class LBloomFilter implements Serializable {
 
-    public interface LHashingStrategy {
+    public interface LHashingStrategy extends Serializable {
         long[] hash(byte[] data, int numHashes);
     }
 
@@ -26,6 +30,28 @@ public class LBloomFilter {
         this.bits = new LBitSet(numBits, chunkSizeLog2);
         this.hashingStrategy = hashingStrategy;
     }
+
+    public LBloomFilter(double fpProb, long maxNumEntries, int chunkSizeLog2) {
+        LIntLong parameters = optimalParameters(fpProb, maxNumEntries);
+        this.numHashes = parameters._1;
+        this.numBits = parameters._2;
+        this.bits = new LBitSet(numBits, chunkSizeLog2);
+        this.hashingStrategy = mumur3Strategy;
+    }
+
+    /**
+     * Used as default hashing strategy.
+     */
+    private static LBloomFilter.LHashingStrategy mumur3Strategy = new LBloomFilter.LHashingStrategy() {
+        int salt = 0xAF;
+
+        public long[] hash(byte[] data, int numHashes) {
+            long[] h = new long[numHashes];
+            for (int i = 0; i < numHashes; i++)
+                h[i] = Hashing.murmur3_128(i + salt).hashBytes(data).asLong();
+            return h;
+        }
+    };
 
     public boolean containsBytes(byte[] bytes) {
         long[] hashes = hashingStrategy.hash(bytes, numHashes);
